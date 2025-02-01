@@ -16,7 +16,8 @@ import java.util.Date;
 @Service
 public class JwtService {
     private static final String ROLE = "role";
-    private static final long EXPIRATION_MS = 300000;
+    // 604800000 - одна неделя до истечения срока действия токена
+    private static final long EXPIRATION_MS = 604800000;
 
     @Value("${token.signing}")
     private String secret;

@@ -15,6 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 public class JwtFilter extends OncePerRequestFilter {
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String START_BEARER = "Bearer ";
     @Autowired
     private JwtService jwtService;
 
@@ -51,10 +53,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     // Достаю bearer token
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
+        String headerAuth = request.getHeader(AUTHORIZATION);
 
-        if(headerAuth != null && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7);
+        if(headerAuth != null && headerAuth.startsWith(START_BEARER)) {
+            return headerAuth.substring(START_BEARER.length());
         }
 
         return null;
