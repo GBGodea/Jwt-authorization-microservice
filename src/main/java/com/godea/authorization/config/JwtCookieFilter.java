@@ -6,6 +6,7 @@ import com.godea.authorization.services.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class JwtFilter extends OncePerRequestFilter {
+public class JwtCookieFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION = "Authorization";
     public static final String START_BEARER = "Bearer ";
     @Autowired
@@ -24,7 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String token = parseJwt(request);
+        String token = getJwtFromCoolies(request);
 
         if(token == null) {
             filterChain.doFilter(request, response);
@@ -52,13 +53,14 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     // Достаю bearer token
-    private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader(AUTHORIZATION);
-
-        if(headerAuth != null && headerAuth.startsWith(START_BEARER)) {
-            return headerAuth.substring(START_BEARER.length());
+    private String getJwtFromCoolies(HttpServletRequest request) {
+        if(request.getCookies() != null) {
+            for(Cookie cookie : request.getCookies()) {
+                if("jwt".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
         }
-
         return null;
     }
 }
