@@ -1,11 +1,13 @@
 package com.godea.authorization.models.dto;
 
 import com.godea.authorization.models.Role;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-@Data
 public class UserDto {
     private String email;
     private Role role;

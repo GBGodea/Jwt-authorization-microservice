@@ -25,7 +25,7 @@ public class JwtCookieFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        String token = getJwtFromCoolies(request);
+        String token = getJwtFromCookies(request);
 
         if(token == null) {
             filterChain.doFilter(request, response);
@@ -53,10 +53,10 @@ public class JwtCookieFilter extends OncePerRequestFilter {
     }
 
     // Достаю bearer token
-    private String getJwtFromCoolies(HttpServletRequest request) {
+    private String getJwtFromCookies(HttpServletRequest request) {
         if(request.getCookies() != null) {
             for(Cookie cookie : request.getCookies()) {
-                if("jwt".equals(cookie.getName())) {
+                if("accessToken".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }
